@@ -119,5 +119,17 @@ RSpec.describe Board do
         oxo
       BOARD2
     end
+
+    it 'chooses the best move on an empty board' do
+      expect(Board(<<-BOARD, 'x').next_move).to eq Board(<<-BOARD2, 'o')
+        ___
+        ___
+        ___
+      BOARD
+        x__
+        ___
+        ___
+      BOARD2
+    end
   end
 end
