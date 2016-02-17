@@ -62,8 +62,8 @@ class Board
     full? && !(win_for?(shape) || lose_for?(shape))
   end
 
-  def next_move_for(shape)
-    next_boards_for(shape).min_by { |board| board.score_for(opponent(shape)) }
+  def next_move
+    next_boards_for(next_shape).min_by { |board| board.score_for(opponent(next_shape)) }
   end
 
   private
