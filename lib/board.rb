@@ -16,7 +16,7 @@ class Board
     !rows.flatten.include?(BLANK)
   end
 
-  def score_for(shape, highest_score = -1, lowest_score = 1)
+  def score_for(shape, maximum_score = -1, minimum_score = 1)
     if win_for?(shape)
       1
     elsif lose_for?(shape)
@@ -25,22 +25,22 @@ class Board
       0
     else
       if shape == next_shape
-        best_score = -1
-        next_boards.each do |board|
-          best_score = [best_score, board.score_for(shape, highest_score, lowest_score)].max
-          highest_score = [highest_score, best_score].max
-          break if lowest_score <= highest_score
+        next_boards.inject(-1) do |score, board|
+          score = [score, board.score_for(shape, maximum_score, minimum_score)].max
+          maximum_score = [maximum_score, score].max
+          break score if minimum_score <= maximum_score
+
+          score
         end
       else
-        best_score = 1
-        next_boards.each do |board|
-          best_score = [best_score, board.score_for(shape, highest_score, lowest_score)].min
-          lowest_score = [lowest_score, best_score].min
-          break if lowest_score <= highest_score
+        next_boards.inject(1) do |score, board|
+          score = [score, board.score_for(shape, maximum_score, minimum_score)].min
+          minimum_score = [minimum_score, score].min
+          break score if minimum_score <= maximum_score
+
+          score
         end
       end
-
-      best_score
     end
   end
 
