@@ -24,24 +24,23 @@ class Board
     elsif draw_for?(shape)
       0
     else
-      next_boards = next_boards_for(shape)
       scores = next_boards.map { |board| board.score_for(opponent(shape)) }
       scores.map { |score| -score }.max
     end
   end
 
-  def next_boards_for(shape)
+  def next_boards
     chars = rows.flatten
 
     boards = chars.map.with_index do |c, index|
       if c == BLANK
-        chars.dup.tap { |chars| chars[index] = shape }
+        chars.dup.tap { |chars| chars[index] = next_shape }
       else
         nil
       end
     end.compact
 
-    boards.map { |board| Board.new(board.each_slice(3).to_a, opponent(shape)) }
+    boards.map { |board| Board.new(board.each_slice(3).to_a, opponent(next_shape)) }
   end
 
   def inspect
@@ -63,7 +62,7 @@ class Board
   end
 
   def next_move
-    next_boards_for(next_shape).min_by { |board| board.score_for(opponent(next_shape)) }
+    next_boards.min_by { |board| board.score_for(opponent(next_shape)) }
   end
 
   private

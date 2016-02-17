@@ -55,9 +55,9 @@ RSpec.describe Board do
     end
   end
 
-  describe '#next_boards_for' do
+  describe '#next_boards' do
     it 'generates all possible next moves' do
-      expect(Board(<<-BOARD, 'x').next_boards_for('x')).to contain_exactly(Board(<<-BOARD2, 'o'), Board(<<-BOARD3, 'o'))
+      expect(Board(<<-BOARD, 'x').next_boards).to contain_exactly(Board(<<-BOARD2, 'o'), Board(<<-BOARD3, 'o'))
         oox
         _xo
         o_o
