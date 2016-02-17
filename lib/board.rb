@@ -1,10 +1,11 @@
 class Board
   NOUGHT, CROSS, BLANK = 'o', 'x', '_'
 
-  attr_accessor :rows
+  attr_accessor :rows, :next_shape
 
-  def initialize(rows)
+  def initialize(rows, next_shape)
     self.rows = rows
+    self.next_shape = next_shape
   end
 
   def ==(other)
@@ -40,7 +41,7 @@ class Board
       end
     end.compact
 
-    boards.map { |board| Board.new(board.each_slice(3).to_a) }
+    boards.map { |board| Board.new(board.each_slice(3).to_a, opponent(shape)) }
   end
 
   def inspect
@@ -72,6 +73,6 @@ class Board
   end
 end
 
-def Board(string)
-  Board.new(string.gsub(/\s/, '').chars.each_slice(3).to_a)
+def Board(string, shape)
+  Board.new(string.gsub(/\s/, '').chars.each_slice(3).to_a, shape)
 end
