@@ -37,15 +37,16 @@ class Board
   def next_boards
     chars = rows.flatten
 
-    boards = chars.map.with_index do |c, index|
-      if c == BLANK
-        chars.dup.tap { |chars| chars[index] = next_shape }
-      else
-        nil
-      end
-    end.compact
+    Enumerator.new do |yielder|
+      chars.each.with_index do |char, index|
+        next if char != BLANK
 
-    boards.map { |board| Board.new(board.each_slice(3).to_a, opponent(next_shape)) }
+        new_board = chars.dup
+        new_board[index] = next_shape
+
+        yielder << Board.new(new_board.each_slice(3).to_a, opponent(next_shape))
+      end
+    end
   end
 
   def inspect
