@@ -1,10 +1,11 @@
 class Board
   NOUGHT, CROSS, BLANK = 'o', 'x', '_'
 
-  attr_accessor :rows
+  attr_accessor :rows, :next_shape
 
-  def initialize(rows)
+  def initialize(rows, next_shape)
     self.rows = rows
+    self.next_shape = next_shape
   end
 
   def ==(other)
@@ -20,27 +21,31 @@ class Board
       1
     elsif lose_for?(shape)
       -1
-    elsif draw_for?(shape)
+    elsif draw?
       0
     else
-      next_boards = next_for(shape)
-      scores = next_boards.map { |board| board.score_for(opponent(shape)) }
-      scores.map { |score| -score }.max
+      scores = next_boards.map { |board| board.score_for(shape) }
+
+      if shape == next_shape
+        scores.max
+      else
+        scores.min
+      end
     end
   end
 
-  def next_for(shape)
+  def next_boards
     chars = rows.flatten
 
     boards = chars.map.with_index do |c, index|
       if c == BLANK
-        chars.dup.tap { |chars| chars[index] = shape }
+        chars.dup.tap { |chars| chars[index] = next_shape }
       else
         nil
       end
     end.compact
 
-    boards.map { |board| Board.new(board.each_slice(3).to_a) }
+    boards.map { |board| Board.new(board.each_slice(3).to_a, opponent(next_shape)) }
   end
 
   def inspect
@@ -57,12 +62,12 @@ class Board
     win_for?(opponent(shape))
   end
 
-  def draw_for?(shape)
-    full? && !(win_for?(shape) || lose_for?(shape))
+  def draw?
+    full? && !(win_for?(next_shape) || lose_for?(next_shape))
   end
 
-  def move_for(shape)
-    next_for(shape).min_by { |board| board.score_for(opponent(shape)) }
+  def next_move
+    next_boards.max_by { |board| board.score_for(next_shape) }
   end
 
   private
@@ -72,6 +77,6 @@ class Board
   end
 end
 
-def Board(string)
-  Board.new(string.gsub(/\s/, '').chars.each_slice(3).to_a)
+def Board(string, shape)
+  Board.new(string.gsub(/\s/, '').chars.each_slice(3).to_a, shape)
 end

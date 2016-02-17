@@ -3,7 +3,7 @@ require 'Board'
 RSpec.describe Board do
   describe '#win_for?' do
     it 'detects horizontal wins' do
-      expect(Board(<<-BOARD)).to be_win_for('x')
+      expect(Board(<<-BOARD, 'x')).to be_win_for('x')
         xxx
         xoo
         _o_
@@ -11,7 +11,7 @@ RSpec.describe Board do
     end
 
     it 'detects diagonal wins from top-left to bottom-right' do
-      expect(Board(<<-BOARD)).to be_win_for('x')
+      expect(Board(<<-BOARD, 'x')).to be_win_for('x')
         xox
         xxo
         oxx
@@ -19,7 +19,7 @@ RSpec.describe Board do
     end
 
     it 'detects diagonal wins from top-right to bottom-left' do
-      expect(Board(<<-BOARD)).to be_win_for('x')
+      expect(Board(<<-BOARD, 'x')).to be_win_for('x')
         xox
         oxo
         xxo
@@ -29,7 +29,7 @@ RSpec.describe Board do
 
   describe '#lose_for?' do
     it 'is true when the opponent wins' do
-      expect(Board(<<-BOARD)).to be_lose_for('x')
+      expect(Board(<<-BOARD, 'x')).to be_lose_for('x')
         ooo
         oxx
         _x_
@@ -37,9 +37,9 @@ RSpec.describe Board do
     end
   end
 
-  describe '#draw_for?' do
+  describe '#draw?' do
     it 'is true when neither player wins and the Board is full' do
-      expect(Board(<<-BOARD)).to be_draw_for('x')
+      expect(Board(<<-BOARD, 'x')).to be_draw
         oox
         xxo
         oxo
@@ -47,7 +47,7 @@ RSpec.describe Board do
     end
 
     it 'is false if the Board is not full' do
-      expect(Board(<<-BOARD)).not_to be_draw_for('x')
+      expect(Board(<<-BOARD, 'x')).not_to be_draw
         oox
         xxo
         o_o
@@ -55,9 +55,9 @@ RSpec.describe Board do
     end
   end
 
-  describe '#next_for' do
+  describe '#next_boards' do
     it 'generates all possible next moves' do
-      expect(Board(<<-BOARD).next_for('x')).to contain_exactly(Board(<<-BOARD2), Board(<<-BOARD3))
+      expect(Board(<<-BOARD, 'x').next_boards).to contain_exactly(Board(<<-BOARD2, 'o'), Board(<<-BOARD3, 'o'))
         oox
         _xo
         o_o
@@ -75,7 +75,7 @@ RSpec.describe Board do
 
   describe '#score_for' do
     it 'returns 1 for a win' do
-      expect(Board(<<-BOARD).score_for('x')).to eq(1)
+      expect(Board(<<-BOARD, 'x').score_for('x')).to eq(1)
         oo_
         xx_
         oxo
@@ -83,7 +83,7 @@ RSpec.describe Board do
     end
 
     it 'returns 1 for a win on the next move' do
-      expect(Board(<<-BOARD).score_for('o')).to eq(1)
+      expect(Board(<<-BOARD, 'o').score_for('o')).to eq(1)
         oo_
         xx_
         oxo
@@ -91,7 +91,7 @@ RSpec.describe Board do
     end
 
     it 'returns -1 for a loss on the next move' do
-      expect(Board(<<-BOARD).score_for('x')).to eq(-1)
+      expect(Board(<<-BOARD, 'x').score_for('x')).to eq(-1)
         oo_
         x__
         oxo
@@ -99,7 +99,7 @@ RSpec.describe Board do
     end
 
     it 'returns 1 for a win two moves ahead' do
-      expect(Board(<<-BOARD).score_for('o')).to eq(1)
+      expect(Board(<<-BOARD, 'o').score_for('o')).to eq(1)
         oo_
         x__
         oxo
@@ -107,9 +107,9 @@ RSpec.describe Board do
     end
   end
 
-  describe '#move_for' do
+  describe '#next_move' do
     it 'chooses the best next move' do
-      expect(Board(<<-BOARD).move_for('x')).to eq Board(<<-BOARD2)
+      expect(Board(<<-BOARD, 'x').next_move).to eq Board(<<-BOARD2, 'o')
         oo_
         xx_
         oxo
