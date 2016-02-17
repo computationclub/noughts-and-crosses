@@ -1,7 +1,7 @@
 ```ruby
-$ irb -rbundler/setup -I. -rnoughts_and_crosses
+$ irb -Ilib -rboard
 
->> b = board('_x_ ___ ___')
+>> b = Board('_x_ ___ ___')
 => _x_
    ___
    ___
@@ -50,7 +50,7 @@ $ irb -rbundler/setup -I. -rnoughts_and_crosses
 => true
 
 
->> b = board('___ _x_ ___')
+>> b = Board('___ _x_ ___')
 => ___
    _x_
    ___
@@ -84,7 +84,7 @@ $ irb -rbundler/setup -I. -rnoughts_and_crosses
 => 0
 
 
->> b = board('_o_ _x_ ___')
+>> b = Board('_o_ _x_ ___')
 => _o_
    _x_
    ___
