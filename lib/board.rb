@@ -62,7 +62,7 @@ class Board
   end
 
   def next_move
-    next_boards.min_by { |board| board.score_for(opponent(next_shape)) }
+    next_boards.max_by { |board| board.score_for(next_shape) }
   end
 
   private
