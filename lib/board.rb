@@ -21,7 +21,7 @@ class Board
       1
     elsif lose_for?(shape)
       -1
-    elsif draw_for?(shape)
+    elsif draw?
       0
     else
       scores = next_boards.map { |board| board.score_for(opponent(shape)) }
@@ -57,8 +57,8 @@ class Board
     win_for?(opponent(shape))
   end
 
-  def draw_for?(shape)
-    full? && !(win_for?(shape) || lose_for?(shape))
+  def draw?
+    full? && !(win_for?(next_shape) || lose_for?(next_shape))
   end
 
   def next_move

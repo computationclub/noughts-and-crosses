@@ -37,9 +37,9 @@ RSpec.describe Board do
     end
   end
 
-  describe '#draw_for?' do
+  describe '#draw?' do
     it 'is true when neither player wins and the Board is full' do
-      expect(Board(<<-BOARD, 'x')).to be_draw_for('x')
+      expect(Board(<<-BOARD, 'x')).to be_draw
         oox
         xxo
         oxo
@@ -47,7 +47,7 @@ RSpec.describe Board do
     end
 
     it 'is false if the Board is not full' do
-      expect(Board(<<-BOARD, 'x')).not_to be_draw_for('x')
+      expect(Board(<<-BOARD, 'x')).not_to be_draw
         oox
         xxo
         o_o
