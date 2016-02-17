@@ -24,13 +24,13 @@ class Board
     elsif draw_for?(shape)
       0
     else
-      next_boards = next_for(shape)
+      next_boards = next_boards_for(shape)
       scores = next_boards.map { |board| board.score_for(opponent(shape)) }
       scores.map { |score| -score }.max
     end
   end
 
-  def next_for(shape)
+  def next_boards_for(shape)
     chars = rows.flatten
 
     boards = chars.map.with_index do |c, index|
@@ -63,7 +63,7 @@ class Board
   end
 
   def move_for(shape)
-    next_for(shape).min_by { |board| board.score_for(opponent(shape)) }
+    next_boards_for(shape).min_by { |board| board.score_for(opponent(shape)) }
   end
 
   private
