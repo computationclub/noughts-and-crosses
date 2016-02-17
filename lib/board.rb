@@ -1,6 +1,3 @@
-require 'rspec/expectations'
-include RSpec::Matchers
-
 class Board
   NOUGHT, CROSS, BLANK = 'o', 'x', '_'
 
@@ -75,90 +72,6 @@ class Board
   end
 end
 
-def board(string)
+def Board(string)
   Board.new(string.gsub(/\s/, '').chars.each_slice(3).to_a)
 end
-
-expect(board('
-             xxx
-             xoo
-             _o_')).to be_win_for('x')
-
-expect(board(<<~BOARD)).to be_win_for('x')
-  xox
-  xxo
-  oxx
-BOARD
-
-expect(board(<<~BOARD)).to be_win_for('x')
-  xox
-  oxo
-  xxo
-BOARD
-
-expect(board('
-             ooo
-             oxx
-             _x_')).to be_lose_for('x')
-
-expect(board(<<~BOARD)).to be_draw_for('x')
-  oox
-  xxo
-  oxo
-BOARD
-
-expect(board(<<~BOARD)).not_to be_draw_for('x')
-  oox
-  xxo
-  o_o
-BOARD
-
-expect(board('
-  oox
-  _xo
-  o_o
-').next_for('x')).to contain_exactly \
-board('
-  oox
-  _xo
-  oxo
-'),
-board('
-  oox
-  xxo
-  o_o
-')
-
-expect(board('
-  oo_
-  xx_
-  oxo
-             ').score_for('x')).to eq 1
-
-expect(board('
-  oo_
-  xx_
-  oxo
-             ').score_for('o')).to eq 1
-
-expect(board('
-  oo_
-  x__
-  oxo
-             ').score_for('x')).to eq -1
-
-expect(board('
-  oo_
-  x__
-  oxo
-             ').score_for('o')).to eq 1
-
-expect(board('
-  oo_
-  xx_
-  oxo
-             ').move_for('x')).to eq board('
-  oo_
-  xxx
-  oxo
-             ')
