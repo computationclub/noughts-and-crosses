@@ -24,8 +24,13 @@ class Board
     elsif draw?
       0
     else
-      scores = next_boards.map { |board| board.score_for(opponent(shape)) }
-      scores.map { |score| -score }.max
+      scores = next_boards.map { |board| board.score_for(shape) }
+
+      if shape == next_shape
+        scores.max
+      else
+        scores.min
+      end
     end
   end
 
