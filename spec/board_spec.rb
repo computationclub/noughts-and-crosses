@@ -107,9 +107,9 @@ RSpec.describe Board do
     end
   end
 
-  describe '#move_for' do
+  describe '#next_move_for' do
     it 'chooses the best next move' do
-      expect(Board(<<-BOARD, 'x').move_for('x')).to eq Board(<<-BOARD2, 'o')
+      expect(Board(<<-BOARD, 'x').next_move_for('x')).to eq Board(<<-BOARD2, 'o')
         oo_
         xx_
         oxo
