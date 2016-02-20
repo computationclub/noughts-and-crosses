@@ -7,22 +7,28 @@ class Scorer
     @current_player = current_player
   end
 
-  def score_for(player)
+  def score_for(player, maximum = -1, minimum = 1)
     if win_for?(player)
       1
     elsif lose_for?(player)
       -1
     elsif draw?
       0
-    else
-      scores = board.next_for(next_player).map { |board|
-        self.class.new(board, next_player).score_for(player)
-      }
+    elsif next_player == player
+      next_scorers.inject(-1) do |score, scorer|
+        score = [score, scorer.score_for(player, maximum, minimum)].max
+        maximum = [maximum, score].max
+        break score if minimum <= maximum
 
-      if next_player == player
-        scores.max
-      else
-        scores.min
+        score
+      end
+    else
+      next_scorers.inject(1) do |score, scorer|
+        score = [score, scorer.score_for(player, maximum, minimum)].min
+        minimum = [minimum, score].min
+        break score if minimum <= maximum
+
+        score
       end
     end
   end
@@ -40,6 +46,14 @@ class Scorer
   end
 
   private
+
+  def next_scorers
+    Enumerator.new do |yielder|
+      board.next_for(next_player).each do |board|
+        yielder << self.class.new(board, next_player)
+      end
+    end
+  end
 
   def next_player
     opponent(current_player)
