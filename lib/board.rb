@@ -16,7 +16,7 @@ class Board
     !rows.flatten.include?(BLANK)
   end
 
-  def score_for(shape)
+  def score_for(shape, maximum_score = -1, minimum_score = 1)
     if win_for?(shape)
       1
     elsif lose_for?(shape)
@@ -24,12 +24,22 @@ class Board
     elsif draw?
       0
     else
-      scores = next_boards.map { |board| board.score_for(shape) }
-
       if shape == next_shape
-        scores.max
+        next_boards.inject(-1) do |score, board|
+          score = [score, board.score_for(shape, maximum_score, minimum_score)].max
+          maximum_score = [maximum_score, score].max
+          break score if minimum_score <= maximum_score
+
+          score
+        end
       else
-        scores.min
+        next_boards.inject(1) do |score, board|
+          score = [score, board.score_for(shape, maximum_score, minimum_score)].min
+          minimum_score = [minimum_score, score].min
+          break score if minimum_score <= maximum_score
+
+          score
+        end
       end
     end
   end
@@ -37,15 +47,16 @@ class Board
   def next_boards
     chars = rows.flatten
 
-    boards = chars.map.with_index do |c, index|
-      if c == BLANK
-        chars.dup.tap { |chars| chars[index] = next_shape }
-      else
-        nil
-      end
-    end.compact
+    Enumerator.new do |yielder|
+      chars.each.with_index do |char, index|
+        next if char != BLANK
 
-    boards.map { |board| Board.new(board.each_slice(3).to_a, opponent(next_shape)) }
+        new_board = chars.dup
+        new_board[index] = next_shape
+
+        yielder << Board.new(new_board.each_slice(3).to_a, opponent(next_shape))
+      end
+    end
   end
 
   def inspect
