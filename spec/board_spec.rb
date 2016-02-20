@@ -1,123 +1,49 @@
-require 'Board'
+require 'board'
 
 RSpec.describe Board do
-  describe '#win_for?' do
-    it 'detects horizontal wins' do
-      expect(Board(<<-BOARD, 'x')).to be_win_for('x')
-        xxx
-        xoo
-        _o_
-      BOARD
-    end
-
-    it 'detects diagonal wins from top-left to bottom-right' do
-      expect(Board(<<-BOARD, 'x')).to be_win_for('x')
-        xox
-        xxo
-        oxx
-      BOARD
-    end
-
-    it 'detects diagonal wins from top-right to bottom-left' do
-      expect(Board(<<-BOARD, 'x')).to be_win_for('x')
-        xox
-        oxo
-        xxo
-      BOARD
+  describe '#inspect' do
+    it 'represents blank spaces with underscores' do
+      expect(Board("___\n___\n___").inspect).to eq("___\n___\n___")
     end
   end
 
-  describe '#lose_for?' do
-    it 'is true when the opponent wins' do
-      expect(Board(<<-BOARD, 'x')).to be_lose_for('x')
-        ooo
-        oxx
-        _x_
-      BOARD
+  describe '#place' do
+    it 'returns a new board with a move played' do
+      board = Board("___\n___\n___")
+
+      expect(board.place('x', 1, 2)).to eq(Board("___\n__x\n___"))
     end
   end
 
-  describe '#draw?' do
-    it 'is true when neither player wins and the Board is full' do
-      expect(Board(<<-BOARD, 'x')).to be_draw
-        oox
-        xxo
-        oxo
-      BOARD
-    end
+  describe '#full?' do
+    it 'returns true if there are no blank places left' do
+      board = Board("xox\noxo\nxxo")
 
-    it 'is false if the Board is not full' do
-      expect(Board(<<-BOARD, 'x')).not_to be_draw
-        oox
-        xxo
-        o_o
-      BOARD
+      expect(board).to be_full
     end
   end
 
-  describe '#next_boards' do
-    it 'generates all possible next moves' do
-      expect(Board(<<-BOARD, 'x').next_boards).to contain_exactly(Board(<<-BOARD2, 'o'), Board(<<-BOARD3, 'o'))
-        oox
-        _xo
-        o_o
-      BOARD
-        oox
-        _xo
-        oxo
-      BOARD2
-        oox
-        xxo
-        o_o
-      BOARD3
+  describe '#diagonals' do
+    it 'returns pieces in both diagonals' do
+      board = Board("xox\noxo\nxxo")
+
+      expect(board.diagonals).to contain_exactly(%w(x x o), %w(x x x))
     end
   end
 
-  describe '#score_for' do
-    it 'returns 1 for a win' do
-      expect(Board(<<-BOARD, 'x').score_for('x')).to eq(1)
-        oo_
-        xx_
-        oxo
-      BOARD
-    end
+  describe '#columns' do
+    it 'returns the pieces in each column' do
+      board = Board("xox\noxo\nxxo")
 
-    it 'returns 1 for a win on the next move' do
-      expect(Board(<<-BOARD, 'o').score_for('o')).to eq(1)
-        oo_
-        xx_
-        oxo
-      BOARD
-    end
-
-    it 'returns -1 for a loss on the next move' do
-      expect(Board(<<-BOARD, 'x').score_for('x')).to eq(-1)
-        oo_
-        x__
-        oxo
-      BOARD
-    end
-
-    it 'returns 1 for a win two moves ahead' do
-      expect(Board(<<-BOARD, 'o').score_for('o')).to eq(1)
-        oo_
-        x__
-        oxo
-      BOARD
+      expect(board.columns).to contain_exactly(%w(x o x), %w(o x x), %w(x o o))
     end
   end
 
-  describe '#next_move' do
-    it 'chooses the best next move' do
-      expect(Board(<<-BOARD, 'x').next_move).to eq Board(<<-BOARD2, 'o')
-        oo_
-        xx_
-        oxo
-      BOARD
-        oo_
-        xxx
-        oxo
-      BOARD2
+  describe '#next_for' do
+    it 'generates all legal next boards for a player' do
+      board = Board("oox\n_xo\no_o")
+
+      expect(board.next_for('x')).to contain_exactly(Board("oox\nxxo\no_o"), Board("oox\n_xo\noxo"))
     end
   end
 end
