@@ -1,4 +1,4 @@
-require 'Board'
+require 'board'
 
 RSpec.describe Board do
   describe '#win_for?' do
