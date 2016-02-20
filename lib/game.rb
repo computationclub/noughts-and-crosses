@@ -1,27 +1,28 @@
 require 'scorer'
+require 'board'
 
 class Game
-  attr_reader :board, :player
+  attr_accessor :board, :player
 
   def initialize(board, player)
-    @board = board
-    @player = player
+    self.board = board
+    self.player = player
   end
 
   def place(row, column)
-    @board = board.place(player, row, column)
-    @player = opponent
+    self.board = board.place(player, row, column)
+    self.player = opponent
 
-    puts @board.inspect
+    board
   end
 
   def play
-    @board = board.next_for(player).max_by { |board|
+    self.board = board.next_for(player).max_by { |board|
       Scorer.new(board, player).score_for(player)
     }
-    @player = opponent
+    self.player = opponent
 
-    puts @board.inspect
+    board
   end
 
   private

@@ -1,5 +1,5 @@
 ```ruby
-$ irb -Ilib -rgame -rboard
+$ irb -Ilib -rgame
 
 game = Game.new(Board('___ ___ ___'), 'x')
 game.place(0, 0)
