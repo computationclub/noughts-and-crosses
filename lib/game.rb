@@ -2,27 +2,23 @@ require 'scorer'
 require 'board'
 
 class Game
-  attr_accessor :board, :player
+  attr_reader :board, :player
 
   def initialize(board, player)
-    self.board = board
-    self.player = player
+    @board = board
+    @player = player
   end
 
   def place(row, column)
-    self.board = board.place(player, row, column)
-    self.player = opponent
-
-    board
+    self.class.new(board.place(player, row, column), opponent)
   end
 
   def play
-    self.board = board.next_for(player).max_by { |board|
-      Scorer.new(board, player).score_for(player)
-    }
-    self.player = opponent
-
-    board
+    self.class.new \
+      board.next_for(player).max_by { |board|
+        Scorer.new(board, player).score_for(player)
+      },
+      opponent
   end
 
   private
