@@ -2,8 +2,6 @@ require 'scorer'
 require 'board'
 
 class Game
-  PLAYERS = 'x'.freeze, 'o'.freeze
-
   attr_reader :board, :player
 
   def initialize(board, player)
@@ -12,7 +10,7 @@ class Game
   end
 
   def place(row, column)
-    self.class.new(board.place(player, row, column), opponent)
+    self.class.new(board.place(player, row, column), player.opponent)
   end
 
   def play
@@ -20,12 +18,6 @@ class Game
       board.next_for(player).max_by { |board|
         Scorer.new(board, player).score_for(player)
       },
-      opponent
-  end
-
-  private
-
-  def opponent
-    PLAYERS.detect(&player.method(:!=))
+      player.opponent
   end
 end

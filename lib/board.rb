@@ -1,3 +1,5 @@
+require 'player'
+
 class Board
   attr_reader :rows
 
@@ -22,14 +24,14 @@ class Board
     Enumerator.new do |yielder|
       rows.each.with_index do |cells, row|
         cells.each.with_index do |cell, column|
-          yielder.yield place(player, row, column) if cell == '_'
+          yielder.yield place(player, row, column) unless cell
         end
       end
     end
   end
 
   def full?
-    !rows.flatten.include?('_'.freeze)
+    rows.flatten.all?
   end
 
   def columns
@@ -45,7 +47,7 @@ class Board
   end
 
   def inspect
-    rows.map(&:join).join("\n")
+    rows.map { |cells| cells.map { |cell| cell ? cell.mark : '_' }.join }.join("\n")
   end
 
   private
@@ -60,5 +62,6 @@ class Board
 end
 
 def Board(string)
-  Board.new(string.gsub(/\s/, '').chars.each_slice(3).to_a)
+  marks = string.gsub(/\s/, '').chars
+  Board.new(marks.map(&Player.method(:for_mark)).each_slice(3).to_a)
 end

@@ -38,7 +38,7 @@ class Scorer
   end
 
   def lose_for?(player)
-    win_for?(opponent(player))
+    win_for?(player.opponent)
   end
 
   def draw?
@@ -56,11 +56,7 @@ class Scorer
   end
 
   def next_player
-    opponent(current_player)
-  end
-
-  def opponent(player)
-    player == 'x'.freeze ? 'o'.freeze : 'x'.freeze
+    current_player.opponent
   end
 
   def horizontal_win_for?(player)
