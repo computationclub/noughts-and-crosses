@@ -15,7 +15,7 @@ class Game
   def play
     self.class.new \
       board.next_for(player).max_by { |board|
-        Scorer.new(board, player.opponent).score_for(player)
+        Scorer.new(self.class.new(board, player.opponent)).score_for(player)
       },
       player.opponent
   end

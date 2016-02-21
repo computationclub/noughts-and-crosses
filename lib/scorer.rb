@@ -1,10 +1,8 @@
 class Scorer
-  attr_reader :board, :current_player
-  private :board, :current_player
+  attr_reader :game
 
-  def initialize(board, current_player)
-    @board = board
-    @current_player = current_player
+  def initialize(game)
+    @game = game
   end
 
   def score_for(player, maximum = -1, minimum = 1)
@@ -14,7 +12,7 @@ class Scorer
       -1
     elsif draw?
       0
-    elsif current_player == player
+    elsif game.player == player
       next_scorers.inject(-1) do |score, scorer|
         score = [score, scorer.score_for(player, maximum, minimum)].max
         maximum = [maximum, score].max
@@ -35,7 +33,7 @@ class Scorer
 
   def win_for?(player)
     [:rows, :columns, :diagonals].any? { |method|
-      board.send(method).any? { |cells|
+      game.board.send(method).any? { |cells|
         cells.all?(&player.method(:==))
       }
     }
@@ -46,15 +44,15 @@ class Scorer
   end
 
   def draw?
-    board.full? && !(win_for?(current_player) || lose_for?(current_player))
+    game.board.full? && !(win_for?(game.player) || lose_for?(game.player))
   end
 
   private
 
   def next_scorers
     Enumerator.new do |yielder|
-      board.next_for(current_player).each do |board|
-        yielder << self.class.new(board, current_player.opponent)
+      game.board.next_for(game.player).each do |board|
+        yielder << self.class.new(Game.new(board, game.player.opponent))
       end
     end
   end
