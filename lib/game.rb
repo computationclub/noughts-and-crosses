@@ -1,5 +1,4 @@
 require 'scorer'
-require 'board'
 
 class Game
   attr_reader :board, :player
