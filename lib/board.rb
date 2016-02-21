@@ -1,14 +1,15 @@
 require 'player'
 
 class Board
-  attr_reader :rows
+  attr_reader :size, :rows
 
-  def initialize(rows)
+  def initialize(size, rows)
+    @size = size
     @rows = rows
   end
 
   def place(player, row, column)
-    self.class.new \
+    self.class.new size, \
       rows.map.with_index { |cells, row_index|
         cells.map.with_index { |cell, column_index|
           if [row_index, column_index] == [row, column]
@@ -63,5 +64,8 @@ end
 
 def Board(string)
   marks = string.gsub(/\s/, '').chars
-  Board.new(marks.map(&Player.method(:for_mark)).each_slice(3).to_a)
+  size = Math.sqrt(marks.count).to_i
+  raise 'board must be square' unless size ** 2 == marks.count
+
+  Board.new(size, marks.map(&Player.method(:for_mark)).each_slice(size).to_a)
 end
