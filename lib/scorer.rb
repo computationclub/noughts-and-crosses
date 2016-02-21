@@ -34,7 +34,11 @@ class Scorer
   end
 
   def win_for?(player)
-    horizontal_win_for?(player) || vertical_win_for?(player) || diagonal_win_for?(player)
+    [:rows, :columns, :diagonals].any? { |method|
+      board.send(method).any? { |cells|
+        cells.all?(&player.method(:==))
+      }
+    }
   end
 
   def lose_for?(player)
@@ -57,17 +61,5 @@ class Scorer
 
   def next_player
     current_player.opponent
-  end
-
-  def horizontal_win_for?(player)
-    board.rows.any? { |cells| cells.all?(&player.method(:==)) }
-  end
-
-  def vertical_win_for?(player)
-    board.columns.any? { |cells| cells.all?(&player.method(:==)) }
-  end
-
-  def diagonal_win_for?(player)
-    board.diagonals.any? { |cells| cells.all?(&player.method(:==)) }
   end
 end
