@@ -60,14 +60,14 @@ class Scorer
   end
 
   def horizontal_win_for?(player)
-    board.rows.any? { |row| row.uniq == [player] }
+    board.rows.any? { |cells| cells.all?(&player.method(:==)) }
   end
 
   def vertical_win_for?(player)
-    board.columns.any? { |column| column.uniq == [player] }
+    board.columns.any? { |cells| cells.all?(&player.method(:==)) }
   end
 
   def diagonal_win_for?(player)
-    board.diagonals.any? { |diagonal| diagonal.uniq == [player] }
+    board.diagonals.any? { |cells| cells.all?(&player.method(:==)) }
   end
 end
