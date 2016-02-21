@@ -11,7 +11,7 @@ RSpec.describe Player do
     specify { expect(O.opponent).to eq X }
   end
 
-  describe '.form_mark' do
+  describe '.for_mark' do
     specify { expect(Player.for_mark('x')).to eq X }
     specify { expect(Player.for_mark('o')).to eq O }
     specify { expect(Player.for_mark('_')).to be_nil }
