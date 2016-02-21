@@ -14,7 +14,7 @@ class Scorer
       -1
     elsif draw?
       0
-    elsif next_player == player
+    elsif current_player == player
       next_scorers.inject(-1) do |score, scorer|
         score = [score, scorer.score_for(player, maximum, minimum)].max
         maximum = [maximum, score].max
@@ -53,7 +53,7 @@ class Scorer
 
   def next_scorers
     Enumerator.new do |yielder|
-      board.next_for(next_player).each do |board|
+      board.next_for(current_player).each do |board|
         yielder << self.class.new(board, next_player)
       end
     end
