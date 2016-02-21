@@ -13,8 +13,11 @@ class Game
   end
 
   def play
+    next_games.max_by { |game| Scorer.new(game).score_for(player) }
+  end
+
+  def next_games
     board.next_for(player).
-      map { |board| self.class.new(board, player.opponent) }.
-      max_by { |game| Scorer.new(game).score_for(player) }
+      map { |board| self.class.new(board, player.opponent) }
   end
 end
