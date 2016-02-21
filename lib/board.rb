@@ -54,11 +54,11 @@ class Board
   private
 
   def left_right_diagonal
-    (0...rows.length).map { |n| rows[n][n] }
+    rows.map.with_index { |cells, index| cells[index] }
   end
 
   def right_left_diagonal
-    (0...rows.length).map { |n| rows[n][rows.length - n - 1] }
+    rows.map.with_index { |cells, index| cells.reverse[index] }
   end
 end
 
