@@ -19,16 +19,11 @@ class Board
   end
 
   def next_for(player)
-    places = rows.flatten
-
     Enumerator.new do |yielder|
-      places.each.with_index do |place, index|
-        next if place != '_'.freeze
-
-        new_board = places.dup
-        new_board[index] = player
-
-        yielder << self.class.new(new_board.each_slice(3).to_a)
+      rows.each.with_index do |cells, row|
+        cells.each.with_index do |cell, column|
+          yielder.yield place(player, row, column) if cell == '_'
+        end
       end
     end
   end
