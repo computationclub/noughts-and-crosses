@@ -2,6 +2,8 @@ require 'scorer'
 require 'board'
 
 class Game
+  PLAYERS = 'x'.freeze, 'o'.freeze
+
   attr_reader :board, :player
 
   def initialize(board, player)
@@ -24,6 +26,6 @@ class Game
   private
 
   def opponent
-    player == 'x'.freeze ? 'o'.freeze : 'x'.freeze
+    PLAYERS.detect(&player.method(:!=))
   end
 end
