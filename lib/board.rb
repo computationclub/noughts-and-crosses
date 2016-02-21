@@ -40,7 +40,9 @@ class Board
   end
 
   def diagonals
-    [left_right_diagonal, right_left_diagonal]
+    [:itself, :reverse].map { |method|
+      rows.map.with_index { |cells, index| cells.send(method)[index] }
+    }
   end
 
   def ==(other)
@@ -49,16 +51,6 @@ class Board
 
   def inspect
     rows.map { |cells| cells.map { |cell| cell ? cell.mark : '_' }.join }.join("\n")
-  end
-
-  private
-
-  def left_right_diagonal
-    rows.map.with_index { |cells, index| cells[index] }
-  end
-
-  def right_left_diagonal
-    rows.map.with_index { |cells, index| cells.reverse[index] }
   end
 end
 
