@@ -54,12 +54,8 @@ class Scorer
   def next_scorers
     Enumerator.new do |yielder|
       board.next_for(current_player).each do |board|
-        yielder << self.class.new(board, next_player)
+        yielder << self.class.new(board, current_player.opponent)
       end
     end
-  end
-
-  def next_player
-    current_player.opponent
   end
 end
