@@ -6,10 +6,16 @@ class Board
   end
 
   def place(player, row, column)
-    new_rows = rows.dup
-    new_rows[row][column] = player
-
-    self.class.new(new_rows)
+    self.class.new \
+      rows.map.with_index { |cells, row_index|
+        cells.map.with_index { |cell, column_index|
+          if [row_index, column_index] == [row, column]
+            player
+          else
+            cell
+          end
+        }
+      }
   end
 
   def next_for(player)
